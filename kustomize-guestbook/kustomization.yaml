@@ -1,7 +1,7 @@
 namePrefix: kustomize-
 
 commonLabels:
-  app: guestbook-ui
+  app: guestbook-ui2
 
 resources:
 - guestbook-ui-deployment.yaml
