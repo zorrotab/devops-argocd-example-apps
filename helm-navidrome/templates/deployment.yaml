@@ -16,7 +16,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Values.PVCName }}
+  name: {{ .Values.persistentVolumeClaim.Name }}
 spec:
   storageClassName: manual
   accessModes:
@@ -29,25 +29,25 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.deploymentName }}
+  name: {{ .Values.deployment.Name }}
   labels:
-    app: {{ .Values.appName }}
+    app: {{ .Values.deployment.appName }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ .Values.appName }}
+      app: {{ .Values.deployment.appName }}
   template:
     metadata:
       labels:
-        app: {{ .Values.appName }}
+        app: {{ .Values.deployment.appName }}
     spec:
       volumes:
         - name: navidrome-music
           persistentVolumeClaim:
-            claimName: navidrome-music-claim
+            claimName: {{ .Values.persistentVolumeClaim.Name }}
       containers:
-        - name: {{ .Values.appName }}
+        - name: {{ .Values.deployment.appName }}
           image: deluan/navidrome:latest
           ports:
             - containerPort: 4533
