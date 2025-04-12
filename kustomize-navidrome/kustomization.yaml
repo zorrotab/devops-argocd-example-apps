@@ -8,6 +8,5 @@ kind: Kustomization
 
 apiVersion: apps/v1
 kind: Deployment
-metadata:
-  labels:
-    app: navidrome
+labels:
+  app: navidrome
