@@ -3,23 +3,27 @@
 # Declare variables to be passed into your templates.
 
 persistentVolume:
-  Name: navidrome-music-volume
+  name: navidrome-music-volume
   hostPath:
-    Path: "/home/user/server/music"
+    path: "/home/user/server/music"
 
 persistentVolumeClaim:
-  Name: navidrome-music-claim
+  name: navidrome-music-claim
 
 deployment:
-  Name: navidrome-deployment
+  name: navidrome-deployment
   appName: navidrome
+  volume:
+    name: navidrome-music
+
+service:
+  name: navidrome-service
 
 replicaCount: 1
 
 image:
-  repository: gcr.io/heptio-images/ks-guestbook-demo
-  tag: 0.1
-  pullPolicy: IfNotPresent
+  repository: deluan/navidrome
+  tag: latest
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

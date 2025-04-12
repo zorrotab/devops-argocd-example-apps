@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: {{ .Values.persistentVolume.Name }}
+  name: {{ .Values.persistentVolume.name }}
   labels:
     type: local
 spec:
@@ -11,12 +11,12 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: {{ .Values.persistentVolume.hostPath.Path }}
+    path: {{ .Values.persistentVolume.hostPath.path }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Values.persistentVolumeClaim.Name }}
+  name: {{ .Values.persistentVolumeClaim.name }}
 spec:
   storageClassName: manual
   accessModes:
@@ -24,12 +24,12 @@ spec:
   resources:
     requests:
       storage: 1Gi
-  volumeName: {{ .Values.persistentVolume.Name }}
+  volumeName: {{ .Values.persistentVolume.name }}
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.deployment.Name }}
+  name: {{ .Values.deployment.name }}
   labels:
     app: {{ .Values.deployment.appName }}
 spec:
@@ -43,12 +43,12 @@ spec:
         app: {{ .Values.deployment.appName }}
     spec:
       volumes:
-        - name: navidrome-music
+        - name: {{ .Values.deployment.volume.name }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistentVolumeClaim.Name }}
+            claimName: {{ .Values.persistentVolumeClaim.name }}
       containers:
         - name: {{ .Values.deployment.appName }}
-          image: deluan/navidrome:latest
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           ports:
             - containerPort: 4533
           env:
@@ -62,4 +62,4 @@ spec:
             value: ""
           volumeMounts:
             - mountPath: "/music:ro"
-              name: navidrome-music
+              name: {{ .Values.deployment.volume.name }}
