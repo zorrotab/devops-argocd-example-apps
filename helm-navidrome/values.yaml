@@ -2,7 +2,15 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+deploymentName: navidrome-deployment
 appName: navidrome
+PVCName: navidrome-music-claim
+
+persistentVolume:
+  Name: navidrome-music-volume
+  hostPath:
+    Path: "/home/user/server/music"
+
 
 replicaCount: 1
 
