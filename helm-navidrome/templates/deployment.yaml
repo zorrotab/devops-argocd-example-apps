@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: navidrome-music-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/home/user/server/music"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: navidrome-music-claim
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  volumeName: navidrome-music-volume
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: navidrome-deployment
+  labels:
+    app: navidrome
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: navidrome
+  template:
+    metadata:
+      labels:
+        app: navidrome
+    spec:
+      volumes:
+        - name: navidrome-music
+          persistentVolumeClaim:
+            claimName: navidrome-music-claim
+      containers:
+        - name: navidrome
+          image: deluan/navidrome:latest
+          ports:
+            - containerPort: 4533
+          env:
+          - name: ND_SCANSCHEDULE
+            value: 1h
+          - name: ND_LOGLEVEL
+            value: info
+          - name: ND_SESSIONTIMEOUT
+            value: 24h
+          - name: ND_BASEURL
+            value: ""
+          volumeMounts:
+            - mountPath: "/music:ro"
+              name: navidrome-music
