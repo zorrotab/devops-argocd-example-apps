@@ -6,5 +6,8 @@ resources:
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-commonLabels:
-  app: navidrome
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: navidrome
